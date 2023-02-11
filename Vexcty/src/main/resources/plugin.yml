@@ -1,0 +1,6 @@
+name: Vexcty
+version: '${project.version}'
+main: com.moonsworkshop.vexcty.Vexcty
+authors: [ MoonsWorkshop ]
+description: 1.8 Version of Vexcty
+website: github.com/MOONSWORKSHOPLLC
