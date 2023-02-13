@@ -10,8 +10,11 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof VexctyPlayer) {
             VexctyPlayer player = (VexctyPlayer) sender;
-
-            player.sendTranslated("%%red%%This text should be red");
+                    if (player.isStaff(true)) {
+                        player.sendMessage("IsStaff = true");
+                    } else {
+                        player.sendMessage("issStaff = fasle");
+                    }
         }
         return false;
     }
