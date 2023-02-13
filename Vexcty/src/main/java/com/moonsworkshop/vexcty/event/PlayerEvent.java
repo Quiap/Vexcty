@@ -117,7 +117,9 @@ public class PlayerEvent implements Listener {
     public void onBuild(BlockPlaceEvent e) {
         VexctyPlayer player = (VexctyPlayer) e.getPlayer();
 
-        if(!player.isStaff()) {
+
+
+        if(player.isStaff(false)) {
             e.setCancelled(true);
         }
     }
@@ -127,7 +129,7 @@ public class PlayerEvent implements Listener {
     public void onBreak(BlockBreakEvent event) {
         VexctyPlayer player = (VexctyPlayer) event.getPlayer();
 
-        if (player.isStaff() && player.getGameMode() == GameMode.CREATIVE) {
+        if (player.isStaff(true) && player.getGameMode() == GameMode.CREATIVE) {
             return;
         }
 
@@ -140,7 +142,7 @@ public class PlayerEvent implements Listener {
     public void onPlace(BlockPlaceEvent event) {
         VexctyPlayer player = (VexctyPlayer) event.getPlayer();
 
-        if (player.isStaff() && player.getGameMode() == GameMode.CREATIVE) {
+        if (player.isStaff(true) && player.getGameMode() == GameMode.CREATIVE) {
             return;
         }
 
@@ -186,7 +188,7 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onItemDropEvent(PlayerDropItemEvent e) {
         VexctyPlayer player = (VexctyPlayer) e.getPlayer();
-        if (!player.isStaff()) {
+        if (player.isStaff(false)) {
             e.setCancelled(true);
         } else {
             e.setCancelled(false);
@@ -197,7 +199,7 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onItemPickup(PlayerPickupItemEvent e) {
         VexctyPlayer player = (VexctyPlayer) e.getPlayer();
-        if (!player.isStaff()) {
+        if (player.isStaff(false)) {
             e.setCancelled(true);
         } else {
             e.setCancelled(false);
@@ -220,7 +222,7 @@ public class PlayerEvent implements Listener {
         VexctyPlayer player = (VexctyPlayer) e.getPlayer();
         PlayerData data = plugin.getPlayer().getPlayerData((Player) player);
         if(data.getPlayerState() == PlayerState.FROZEN) {
-            plugin.getServer().getOnlinePlayers().stream().filter(players -> player.isStaff()).forEach(players -> {
+            plugin.getServer().getOnlinePlayers().stream().filter(players -> player.isStaff(true)).forEach(players -> { // for the players that are staff
                 player.sendMessage(CC.DARK_GRAY + "[" + CC.DARK_RED + "!" + CC.DARK_GRAY + "] " + CC.SECONDARY + player.getName() + CC.PRIMARY + " has left the server while he was frozen!");
                 TextComponent clickToBan = new TextComponent(CC.RED + "[Click to ban]");
                 clickToBan.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(CC.I_GRAY + "Click to ban " + player.getName()).create()));
@@ -251,7 +253,7 @@ public class PlayerEvent implements Listener {
                 switch(item.getType()) {
 
                     case PACKED_ICE:
-                        if(target.isStaff()) {
+                        if(target.isStaff(true)) {
                             player.sendMessage(CC.RED + "You cannot interact with other staff members.");
                             return;
                         }
@@ -262,7 +264,7 @@ public class PlayerEvent implements Listener {
                         break;
 
                     case BLAZE_ROD:
-                        if(target.isStaff()) {
+                        if(target.isStaff(true)) {
                             player.sendMessage(CC.RED + "You cannot interact with other staff members.");
                             return;
                         }
