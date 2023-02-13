@@ -15,8 +15,7 @@ public interface VexctyPlayer extends HumanEntity, Conversable, CommandSender, O
         }
     }
 
-    public default boolean isStaff() {
-        boolean isStafff;
+    public default boolean isStaff(boolean isStafff) {
 
         if (getPlayer().hasPermission("f2erg.vexcty.admin")) {
             isStafff = true;
@@ -29,6 +28,8 @@ public interface VexctyPlayer extends HumanEntity, Conversable, CommandSender, O
     public boolean isSneaking();
 
     public float getExhaustion();
+
+    void setPlayerListName(String var1);
 
     public void setExhaustion(float value);
 
