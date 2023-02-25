@@ -242,20 +242,23 @@ public class CraftPlayer extends CraftHumanEntity implements VexctyPlayer {
 
     @Override
     public void sendTranslated(String msg) {
-        if (msg.contains("%%red%%")) {
-            msg.replace("%%red%%", "");
-            sendMessage(CC.RED + msg);
+        if (!this.conversationTracker.isConversingModaly()) {
+            if (msg.contains("%%red%%")) {
+                msg.replace("%%red%%", "");
+                sendMessage(CC.RED + msg);
+            }
         }
     }
 
     @Override
-    public boolean isStaff(boolean isStafff) {
+    public boolean isStaff() {
         if (getPlayer().hasPermission("f2erg.vexcty.admin")) {
-            isStafff = true;
-        } else {
-            isStafff = false;
+            return true;
         }
-        return isStafff;
+        else {
+            return false;
+        }
+
     }
 
 

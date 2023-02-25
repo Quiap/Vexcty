@@ -56,6 +56,7 @@ public abstract class VexGot extends JavaPlugin {
             this.console.sendMessage(String.format("%s%s %s by %sMoonsworkshop LLC <3!", ChatColor.GRAY, this.getDescription().getName(), this.getDescription().getVersion(), ChatColor.DARK_PURPLE));
             this.console.sendMessage(String.format("%sAction: %s%s%s...", ChatColor.GRAY, ChatColor.RED, "Disabling", ChatColor.GRAY));
             this.PluginDisable();
+
             this.console.sendMessage(ChatColor.GREEN + "=============================");
             this.console.sendMessage(" ");
         }

@@ -20,7 +20,7 @@ public interface VexctyPlayer extends HumanEntity, Conversable, CommandSender, O
 
     void sendTranslated(String msg);
 
-    boolean isStaff(boolean isStafff);
+    boolean isStaff();
 
 
     String getDisplayName();
