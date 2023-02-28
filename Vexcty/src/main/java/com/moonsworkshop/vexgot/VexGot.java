@@ -37,6 +37,7 @@ public abstract class VexGot extends JavaPlugin {
 
             } catch (Throwable var2) {
                 this.criticalErrorOnPluginStartup(var2);
+                var2.printStackTrace();
                 this.console.sendMessage(ChatColor.RED + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                 this.console.sendMessage(" ");
                 return;
@@ -45,8 +46,6 @@ public abstract class VexGot extends JavaPlugin {
             this.console.sendMessage(ChatColor.GREEN + "=============================");
             this.console.sendMessage(" ");
         }
-
-        getCommand("version").setExecutor(new VersionCommand());
     }
 
     public final void onDisable() {

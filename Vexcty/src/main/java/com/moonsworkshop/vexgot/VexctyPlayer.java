@@ -22,7 +22,6 @@ public interface VexctyPlayer extends HumanEntity, Conversable, CommandSender, O
 
     boolean isStaff();
 
-
     String getDisplayName();
 
     void setDisplayName(String var1);
