@@ -32,7 +32,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -40,7 +40,45 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <minimizeJar>false</minimizeJar>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <artifactSet>
+                                <includes>
+                                    <include>me.lucko:shadow</include>
+                                    <include>me.lucko:shadow-bukkit</include>
+                                    <include>com.flowpowered:flow-math</include>
+                                    <include>net.jodah:expiringmap</include>
+                                    <include>net.kyori:text-api</include>
+                                    <include>net.kyori:text-adapter-bukkit</include>
+                                    <include>net.kyori:text-serializer-gson</include>
+                                    <include>net.kyori:text-serializer-legacy</include>
+                                    <include>net.kyori:text-feature-pagination</include>
+                                    <include>me.lucko:textlegacy</include>
+                                    <include>org.spongepowered:configurate-core</include>
+                                    <include>org.spongepowered:configurate-yaml</include>
+                                    <include>org.spongepowered:configurate-gson</include>
+                                    <include>org.spongepowered:configurate-hocon</include>
+                                    <include>com.typesafe:config</include>
+                                    <include>net.kyori:event-api</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>ninja.leaping.configurate</pattern>
+                                    <shadedPattern>me.lucko.helper.config</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.typesafe.config</pattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>net.kyori.text</pattern>
+                                    <shadedPattern>me.lucko.helper.text3</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>net.kyori.event</pattern>
+                                    <shadedPattern>me.lucko.helper.eventbus</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
@@ -78,6 +116,23 @@
             <id>dmulloy2-repo</id>
             <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
+        <repository>
+            <id>viaversion-repo</id>
+            <url>https://repo.viaversion.com</url>
+        </repository>
+        <repository>
+            <id>luck-repo</id>
+            <url>https://repo.lucko.me/</url>
+        </repository>
+        <repository>
+            <id>citizens-repo</id>
+            <url>https://maven.citizensnpcs.co/repo</url>
+        </repository>
+        <repository>
+            <id>conf-yaml</id>
+            <url>https://mvnrepository.com/artifact/ninja.leaping.configurate/configurate-yaml</url>
+        </repository>
+
     </repositories>
 
     <dependencies>
@@ -116,6 +171,8 @@
             <version>23.0.0</version>
             <scope>compile</scope>
         </dependency>
+
+
 
     </dependencies>
 </project>
