@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.spongepowered:configurate-gson:4.2.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/spongepowered/configurate-gson/4.2.0-SNAPSHOT/configurate-gson-4.2.0-20230223.062246-119.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/spongepowered/configurate-gson/4.2.0-SNAPSHOT/configurate-gson-4.2.0-20230223.062246-119-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/spongepowered/configurate-gson/4.2.0-SNAPSHOT/configurate-gson-4.2.0-20230223.062246-119-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

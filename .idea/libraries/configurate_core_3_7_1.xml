@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="VexGot-1.0">
+  <library name="configurate-core-3.7.1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../VexGot/target/VexGot-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/configurate-core-3.7.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
