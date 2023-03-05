@@ -5,6 +5,7 @@ authors: [ MoonsWorkshop ]
 description: 1.8 Version of Vexcty
 website: github.com/MOONSWORKSHOPLLC
 commands:
-    test:
-    punish:
-    rank:
+  test:
+  punish:
+  rank:
+  lang:
