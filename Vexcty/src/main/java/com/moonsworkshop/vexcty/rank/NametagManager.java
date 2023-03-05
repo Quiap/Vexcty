@@ -1,6 +1,7 @@
 package com.moonsworkshop.vexcty.rank;
 
 import com.moonsworkshop.vexcty.Vexcty;
+import com.moonsworkshop.vexgot.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
@@ -15,7 +16,11 @@ public class NametagManager {
         player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         for (PlayerRank rank : PlayerRank.values()) {
             Team team = player.getScoreboard().registerNewTeam(rank.name());
-            team.setPrefix(rank.getName() + " ");
+            if (rank == PlayerRank.MEMBER) {
+                team.setPrefix(CC.GRAY + "");
+            } else {
+                team.setPrefix(rank.getName() + " ");
+            }
         }
         for (Player tar : Bukkit.getOnlinePlayers()) {
 
