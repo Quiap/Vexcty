@@ -1,6 +1,7 @@
 package com.moonsworkshop.vexcty.rank;
 
 import com.moonsworkshop.vexcty.Vexcty;
+import com.moonsworkshop.vexcty.afk.AFKManager;
 import com.moonsworkshop.vexgot.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -9,6 +10,8 @@ import org.bukkit.scoreboard.Team;
 public class NametagManager {
 
     private Vexcty vexcty;
+
+    AFKManager afkManager;
 
     public NametagManager(Vexcty vexcty) { this.vexcty = vexcty; }
 
@@ -19,7 +22,7 @@ public class NametagManager {
             if (rank == PlayerRank.MEMBER) {
                 team.setPrefix(CC.GRAY + "");
             } else {
-                team.setPrefix(rank.getName() + " ");
+                    team.setPrefix(rank.getName() + " ");
             }
         }
         for (Player tar : Bukkit.getOnlinePlayers()) {
