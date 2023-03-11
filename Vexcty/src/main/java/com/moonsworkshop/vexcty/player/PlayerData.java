@@ -1,7 +1,7 @@
 package com.moonsworkshop.vexcty.player;
 
 import com.moonsworkshop.vexcty.Vexcty;
-import com.moonsworkshop.vexcty.api.craftbukkit.VexctyPlayer;
+import com.moonsworkshop.vexgot.IVexctyPlayer;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -35,7 +35,7 @@ public class PlayerData {
 //    }
 
     public void setVanished(boolean vanished) {
-        VexctyPlayer player = (VexctyPlayer) Bukkit.getPlayer(this.playerID);
+        IVexctyPlayer player = (IVexctyPlayer) Bukkit.getPlayer(this.playerID);
         if(vanished) {
             this.vanished = true;
             plugin.getServer().getOnlinePlayers().stream().filter(players -> !players.hasPermission("moderation.staff")).forEach(players -> players.hidePlayer((Player) player));
