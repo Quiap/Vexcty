@@ -15,6 +15,7 @@ import com.moonsworkshop.vexcty.rank.RankCommand;
 import com.moonsworkshop.vexcty.rank.RankManager;
 import com.moonsworkshop.vexcty.sql.ProfileManager;
 import com.moonsworkshop.vexcty.sql.SQLManager;
+import com.moonsworkshop.vexgot.HidePlayerList;
 import com.moonsworkshop.vexgot.VexGot;
 import lombok.Getter;
 import me.lucko.helper.npc.Npc;
@@ -28,6 +29,8 @@ import java.util.UUID;
 
 @Getter
 public class Vexcty extends VexGot {
+
+    public static HidePlayerList playerList;
 
     private static Vexcty instance;
     @Getter
@@ -75,6 +78,7 @@ public class Vexcty extends VexGot {
         configManager = new ConfigManager();
         recentMessages = new HashMap<>();
         profileManager = new ProfileManager(this);
+        playerList = new HidePlayerList(this);
 
     }
 

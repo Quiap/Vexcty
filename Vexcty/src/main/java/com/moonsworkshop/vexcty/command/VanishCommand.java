@@ -18,7 +18,7 @@ public class VanishCommand implements CommandExecutor {
         this.vexcty = vexcty;
     }
 
-    public static boolean isVanished;
+    public static boolean isVanished = false;
 
     private ArrayList<Player> vanished = new ArrayList<Player>();
 
@@ -31,14 +31,14 @@ public class VanishCommand implements CommandExecutor {
                     for (Player target : Bukkit.getOnlinePlayers()) {
                         target.hidePlayer(player);
                     }
-                    player.setPlayerListName("");
+                    Vexcty.playerList.hidePlayer(player);
                     vanished.add(player);
                     player.sendMessage(CC.GREEN + "You have been vanished!");
                 } else {
                     for (Player target : Bukkit.getOnlinePlayers()) {
                         target.showPlayer(player);
                     }
-                    player.setPlayerListName(vexcty.getRankManager().getRank(player.getUniqueId()).getName() + " " + player.getName());
+                    Vexcty.playerList.showPlayer(player);
                     vanished.remove(player);
                     player.sendMessage(CC.GREEN + "You have un-vanished!");
                 }
