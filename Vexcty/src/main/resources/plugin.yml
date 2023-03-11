@@ -5,7 +5,24 @@ authors: [ MoonsWorkshop ]
 description: 1.8 Version of Vexcty
 website: github.com/MOONSWORKSHOPLLC
 commands:
+  grant:
   test:
   punish:
   rank:
   lang:
+  admin:
+  v:
+    aliases: vanish
+  version:
+    aliases: ver
+  addvelocitytoall:
+    aliases:
+      - avta
+  addvelocitytoplayer:
+    aliases:
+      - avtp
+  message:
+    aliases: msg
+  reply:
+    aliases: r
+

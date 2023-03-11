@@ -1,21 +1,25 @@
 package com.moonsworkshop.vexcty.command;
 
-import com.moonsworkshop.vexcty.api.craftbukkit.VexctyPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import com.moonsworkshop.vexcty.rank.*;
+import org.bukkit.entity.Player;
 
 public class TestCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof VexctyPlayer) {
-            VexctyPlayer player = (VexctyPlayer) sender;
-                    if (player.isStaff(true)) {
-                        player.sendMessage("IsStaff = true");
-                    } else {
-                        player.sendMessage("issStaff = fasle");
-                    }
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
+
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+
+            if (PlayerRank.ADMIN.isStaffRank()) {
+                player.sendMessage("You are staff");
+            } else {
+                player.sendMessage("You are not staff");
+            }
         }
+
         return false;
     }
 }
