@@ -16,7 +16,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
-public interface VexctyPlayer extends HumanEntity, Conversable, CommandSender, OfflinePlayer, PluginMessageRecipient {
+public interface IVexctyPlayer extends HumanEntity, Conversable, CommandSender, OfflinePlayer, PluginMessageRecipient {
 
     void sendTranslated(String msg);
 
@@ -188,11 +188,11 @@ public interface VexctyPlayer extends HumanEntity, Conversable, CommandSender, O
 
     void setAllowFlight(boolean var1);
 
-    void hidePlayer(VexctyPlayer var1);
+    void hidePlayer(IVexctyPlayer var1);
 
-    void showPlayer(VexctyPlayer var1);
+    void showPlayer(IVexctyPlayer var1);
 
-    boolean canSee(VexctyPlayer var1);
+    boolean canSee(IVexctyPlayer var1);
 
     /** @deprecated */
     @Deprecated
@@ -240,7 +240,7 @@ public interface VexctyPlayer extends HumanEntity, Conversable, CommandSender, O
     @Deprecated
     void resetTitle();
 
-    VexctyPlayer.Spigot spigot();
+    IVexctyPlayer.Spigot spigot();
 
     public static class Spigot extends Entity.Spigot {
         public Spigot() {
@@ -270,7 +270,7 @@ public interface VexctyPlayer extends HumanEntity, Conversable, CommandSender, O
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public Set<VexctyPlayer> getHiddenPlayers() {
+        public Set<IVexctyPlayer> getHiddenPlayers() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 

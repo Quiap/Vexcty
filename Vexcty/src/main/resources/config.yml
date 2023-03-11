@@ -1,0 +1,6 @@
+database:
+  host: "sql"
+  port: "19325"
+  user: "sql"
+  password: ""
+  database_name: "vexctyserver"
