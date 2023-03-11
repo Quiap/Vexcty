@@ -1,7 +1,7 @@
 package com.moonsworkshop.vexcty.lang;
 
 import com.moonsworkshop.vexcty.Vexcty;
-import com.moonsworkshop.vexcty.api.util.CC;
+import com.moonsworkshop.vexgot.CC;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
