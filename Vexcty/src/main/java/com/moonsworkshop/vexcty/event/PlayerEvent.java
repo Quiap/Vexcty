@@ -3,14 +3,16 @@ package com.moonsworkshop.vexcty.event;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.moonsworkshop.vexcty.Vexcty;
-import com.moonsworkshop.vexcty.lang.Lang;
+import com.moonsworkshop.vexcty.command.GrantCommand;
 import com.moonsworkshop.vexcty.player.PlayerData;
 import com.moonsworkshop.vexcty.player.PlayerState;
 import com.moonsworkshop.vexcty.rank.PlayerRank;
-import com.moonsworkshop.vexcty.sql.PlayerStats;
 import com.moonsworkshop.vexcty.sql.Profile;
 import com.moonsworkshop.vexcty.sql.SQLManager;
-import com.moonsworkshop.vexgot.*;
+import com.moonsworkshop.vexgot.CC;
+import com.moonsworkshop.vexgot.IVexctyPlayer;
+import com.moonsworkshop.vexgot.Items;
+import com.moonsworkshop.vexgot.Locations;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -20,6 +22,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -29,6 +32,7 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.Inventory;
@@ -41,30 +45,26 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.Locale;
-
-import static com.moonsworkshop.vexcty.Vexcty.boards;
-import static org.bukkit.Bukkit.getServer;
 
 public class PlayerEvent implements Listener {
+
+    SQLManager database;
 
     private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build();
 
     Vexcty plugin;
-    SQLManager sql;
 
-    public PlayerEvent(Vexcty instance, SQLManager sql) {
+    public PlayerEvent(Vexcty instance) {
         this.plugin = instance;
-        this.sql = sql;
     }
 
     // disabled commands
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
-        if (e.getMessage() == "version" ||
-                e.getMessage() == "about" ||
-                e.getMessage() == "ver" ||
+        if (e.getMessage() == "bukkit:version" ||
+                e.getMessage() == "bukkit:about" ||
+                e.getMessage() == "bukkit:ver" ||
                 e.getMessage() == "icanhasbukkit" ||
                 e.getMessage().contains(":") ||
                 e.getMessage() == "?" ||
@@ -98,8 +98,11 @@ public class PlayerEvent implements Listener {
 
         PlayerRank rank = plugin.getRankManager().getRank(player.getUniqueId());
 
+        if (rank == PlayerRank.OWNER) {
+            player.setPlayerListName("");
+        }
+
         if (rank == PlayerRank.OWNER ||
-                rank == PlayerRank.CO_OWNER ||
                 rank == PlayerRank.MANAGER ||
                 rank == PlayerRank.ADMIN ||
                 rank == PlayerRank.MOD ||
@@ -109,11 +112,9 @@ public class PlayerEvent implements Listener {
                 rank == PlayerRank.MOJANG ||
                 rank == PlayerRank.LEGEND ||
                 rank == PlayerRank.DONOR) {
-            player.setFlying(true);
             player.getEnderChest().clear();
 
         } else {
-            player.setFlying(false);
             player.getEnderChest().clear();
         }
 
@@ -170,61 +171,61 @@ public class PlayerEvent implements Listener {
 
         inv.clear();
         inv.setArmorContents(null);
-        inv.setItem(8,  new ItemStack(Items.vanishOff));
+        inv.setItem(4, Items.TELEPORTER_ITEM);
+        inv.setItem(6, Items.network);
 
-        getServer().getScheduler().runTaskTimer(new Vexcty(), () -> {
-            if (!player.getInventory().contains(Items.TELEPORTER_ITEM)){
-                inv.setItem(4, Items.TELEPORTER_ITEM);
-            }
-        }, 0, 20);
-
-
-
-
-        Board board = new Board((Player) player);
-
-        if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.EN)) {
-            board.updateTitle(CC.RED + "Vexcty Network");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.AR)) {
-            board.updateTitle(CC.RED + "شبكة فيكستي");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.FR)) {
-            board.updateTitle(CC.RED + "Réseau Vexcty");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.IT)) {
-            board.updateTitle(CC.RED + "Rete Vexcty");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.JA)) {
-            board.updateTitle(CC.RED + "ベクティ ネットワーク");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.LA)) {
-            board.updateTitle(CC.RED + "Vexcty Network");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.PA)) {
-            board.updateTitle(CC.RED + "ਵੇਕਸੀਟੀ ਨੈੱਟਵਰਕ");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.RU)) {
-            board.updateTitle(CC.RED + "Сеть Вексти");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.ES)) {
-            board.updateTitle(CC.RED + "red vejatorio");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.TR)) {
-            board.updateTitle(CC.RED + "Vexty Ağı");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.UR)) {
-            board.updateTitle(CC.RED + "ویکسیٹی نیٹ ورک");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.AM)) {
-            board.updateTitle(CC.RED + "Vexcty አውታረ መረብ");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.ZH)) {
-            board.updateTitle(CC.RED + "Vexcty网络");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.ZHHK)) {
-            board.updateTitle(CC.RED + "Vexcty網絡");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.CS)) {
-            board.updateTitle(CC.RED + "Síť Vexcty");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.DE)) {
-            board.updateTitle(CC.RED + "Vexcty-Netzwerk");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.FI)) {
-            board.updateTitle(CC.RED + "Vexcty verkko");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.PT)) {
-            board.updateTitle(CC.RED + "Rede Vexcty");
-        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.PL)) {
-            board.updateTitle(CC.RED + "Sieć Vexcty");
+        Profile profile = plugin.getProfileManager().getProfile(player);
+        try {
+            Bukkit.getScheduler().runTaskAsynchronously(new Vexcty(), () -> profile.getData().load(player));
+        } catch (NullPointerException e1) {
+            player.kickPlayer("Error: Player profile could not be loaded!");
         }
 
 
-        boards.put(player.getUniqueId(), board);
+//        Board board = new Board((Player) player);
+//
+//        if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.EN)) {
+//            board.updateTitle(CC.RED + "Vexcty Network");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.AR)) {
+//            board.updateTitle(CC.RED + "شبكة فيكستي");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.FR)) {
+//            board.updateTitle(CC.RED + "Réseau Vexcty");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.IT)) {
+//            board.updateTitle(CC.RED + "Rete Vexcty");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.JA)) {
+//            board.updateTitle(CC.RED + "ベクティ ネットワーク");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.LA)) {
+//            board.updateTitle(CC.RED + "Vexcty Network");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.PA)) {
+//            board.updateTitle(CC.RED + "ਵੇਕਸੀਟੀ ਨੈੱਟਵਰਕ");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.RU)) {
+//            board.updateTitle(CC.RED + "Сеть Вексти");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.ES)) {
+//            board.updateTitle(CC.RED + "red vejatorio");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.TR)) {
+//            board.updateTitle(CC.RED + "Vexty Ağı");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.UR)) {
+//            board.updateTitle(CC.RED + "ویکسیٹی نیٹ ورک");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.AM)) {
+//            board.updateTitle(CC.RED + "Vexcty አውታረ መረብ");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.ZH)) {
+//            board.updateTitle(CC.RED + "Vexcty网络");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.ZHHK)) {
+//            board.updateTitle(CC.RED + "Vexcty網絡");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.CS)) {
+//            board.updateTitle(CC.RED + "Síť Vexcty");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.DE)) {
+//            board.updateTitle(CC.RED + "Vexcty-Netzwerk");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.FI)) {
+//            board.updateTitle(CC.RED + "Vexcty verkko");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.PT)) {
+//            board.updateTitle(CC.RED + "Rede Vexcty");
+//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.PL)) {
+//            board.updateTitle(CC.RED + "Sieć Vexcty");
+//        }
+//
+//
+//        boards.put(player.getUniqueId(), board);
 
 
     }
@@ -255,13 +256,13 @@ public class PlayerEvent implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
 
+        Profile profile = plugin.getProfileManager().getProfile(player);
+        if(profile != null) {
+            Bukkit.getScheduler().runTaskAsynchronously(new Vexcty(), () -> profile.getData().save(player));
+        }
+
         plugin.getNametagManager().removeTag(e.getPlayer());
 
-        Board board = boards.remove(player.getUniqueId());
-
-        if (board != null) {
-            board.delete();
-        }
 
         e.setQuitMessage(null);
 
@@ -276,6 +277,7 @@ public class PlayerEvent implements Listener {
             });
         }
         plugin.getPlayer().destroyData((Player) player);
+        plugin.getRecentMessages().remove(e.getPlayer().getUniqueId());
     }
 
     // void check
@@ -602,68 +604,108 @@ public class PlayerEvent implements Listener {
         }
     }
 
-    /* SQL */
-
     @EventHandler
     public void onProfileLoad(AsyncPlayerPreLoginEvent event) {
         try {
             plugin.getProfileManager().handleProfileCreation(event.getUniqueId(), event.getName());
         } catch (NullPointerException e) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, CC.RED + "Vexcty SQL error: #001\n Please submit a bug report and add the number above.");
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, "ERROR: Profile could not be created");
         }
     }
 
     @EventHandler
-    public void saveData(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfile(player);
-        if(profile != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(new Vexcty(), () -> profile.getData().save(player));
+    public void OnInventoryClick(InventoryClickEvent e) {
+        Player p = (Player) e.getWhoClicked();
+
+        if (e.getView().getTitle().equals("Select Player")) {
+            e.setCancelled(true);
+            if(e.getCurrentItem() != null) {
+                p.closeInventory();
+                String name = e.getCurrentItem().getItemMeta().getDisplayName();
+                GrantCommand.firstGUI(p);
+
+
+            }
+        } else if (e.getView().getTitle().equals("Select")) {
+
+            e.setCancelled(true);
+
+            switch (e.getSlot()) {
+
+                case 13:
+                    p.closeInventory();
+                    GrantCommand.secondGUI(p);
+
+                    break;
+            }
+        } else if (e.getView().getTitle().equals("Select Rank")) {
+            e.setCancelled(true);
+
+            switch (e.getSlot()) {
+                case 10:
+                    p.closeInventory();
+                    p.sendMessage(CC.GREEN + "You gave yourself Legend");
+                    p.performCommand("rank " + p.getName() + " legend");
+                    break;
+
+                case 12:
+                    p.closeInventory();
+                    p.sendMessage(CC.GREEN + "You gave yourself Hacker");
+                    p.performCommand("rank " + p.getName() + " hacker");
+                    break;
+
+                case 14:
+                    p.closeInventory();
+                    p.sendMessage(CC.GREEN + "You gave yourself Noob");
+                    p.performCommand("rank " + p.getName() + " noob");
+                    break;
+
+                case 16:
+                    p.closeInventory();
+                    p.sendMessage(CC.GREEN + "You gave yourself Voter");
+                    p.performCommand("rank " + p.getName() + " voter");
+                    break;
+
+                case 26:
+                    p.closeInventory();
+                    GrantCommand.adminGUI(p);
+                    break;
+            }
+        } else if (e.getView().getTitle().equals("Admin Ranks")) {
+            e.setCancelled(true);
+
+            switch (e.getSlot()) {
+                case 9:
+                    p.closeInventory();
+                    p.sendMessage(CC.GREEN + "You gave yourself Owner");
+                    p.performCommand("rank " + p.getName() + " owner");
+                    break;
+
+                case 11:
+                    p.closeInventory();
+                    p.sendMessage(CC.GREEN + "You gave yourself Manager");
+                    p.performCommand("rank " + p.getName() + " manager");
+                    break;
+
+                case 13:
+                    p.closeInventory();
+                    p.sendMessage(CC.GREEN + "You gave yourself Administrator");
+                    p.performCommand("rank " + p.getName() + " admin");
+                    break;
+
+                case 15:
+                    p.closeInventory();
+                    p.sendMessage(CC.GREEN + "You gave yourself Moderator");
+                    p.performCommand("rank " + p.getName() + " mod");
+                    break;
+
+                case 17:
+                    p.closeInventory();
+                    p.sendMessage(CC.GREEN + "You gave yourself Developer");
+                    p.performCommand("rank " + p.getName() + " dev");
+                    break;
+            }
         }
-        Player p = event.getPlayer();
-        try{
-            PlayerStats playerStats = getPlayerStatsFromDatabase(p);
-            playerStats.setLastLogout(new Date());
-            sql.updatePlayerStats(playerStats);
-        }catch (SQLException e1){
-            e1.printStackTrace();
-            System.out.println("Could not update player stats after quit.");
-        }
-    }
-
-    @EventHandler
-    public void onSQLJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfile(player);
-        try {
-            Bukkit.getScheduler().runTaskAsynchronously(new Vexcty(), () -> profile.getData().load(player));
-        } catch (NullPointerException e) {
-            player.kickPlayer(CC.RED + "Vexcty SQL error: #002\n Please submit a bug report and add the number above.");
-        }
-
-        Player p = event.getPlayer();
-        try{
-            PlayerStats playerStats = getPlayerStatsFromDatabase(p);
-            playerStats.setLastLogin(new Date());
-            sql.updatePlayerStats(playerStats);
-        }catch (SQLException e){
-            e.printStackTrace();
-            System.out.println("Could not update player stats after join.");
-        }
-
-    }
-
-
-    public PlayerStats getPlayerStatsFromDatabase(Player player) throws SQLException {
-
-        PlayerStats playerStats = sql.findPlayerStatsByUUID(player.getUniqueId().toString());
-
-        if (playerStats == null) {
-            playerStats = new PlayerStats(player.getUniqueId().toString(), player.getName().toString(), new Date(), new Date(), new Date());
-            sql.createPlayerStats(playerStats);
-        }
-
-        return playerStats;
     }
 
 
