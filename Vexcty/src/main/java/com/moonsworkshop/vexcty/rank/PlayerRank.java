@@ -37,15 +37,6 @@ public enum PlayerRank {
         this.isStaffRank = isStaffRank;
     }
 
-    public boolean isStaffRank(boolean isStaffRank) {
-
-        if (PlayerRank.isStaffRankk() == true) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
 
 }

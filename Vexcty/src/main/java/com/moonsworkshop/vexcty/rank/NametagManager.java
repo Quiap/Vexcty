@@ -13,6 +13,10 @@ public class NametagManager {
 
     AFKManager afkManager;
 
+    Player player = null;
+
+    PlayerRank getRank = vexcty.getRankManager().getRank(player.getUniqueId());
+
     public NametagManager(Vexcty vexcty) { this.vexcty = vexcty; }
 
     public void setNametags(Player player) {
@@ -22,7 +26,7 @@ public class NametagManager {
             if (rank == PlayerRank.MEMBER) {
                 team.setPrefix(CC.GRAY + "");
             } else {
-                    team.setPrefix(rank.getName() + " ");
+                team.setPrefix(rank.getName().toString() + " ");
             }
         }
         for (Player tar : Bukkit.getOnlinePlayers()) {
@@ -34,7 +38,7 @@ public class NametagManager {
     }
 
     public void newTag(Player player) {
-        PlayerRank rank = vexcty.getRankManager().getRank(player.getUniqueId());
+        PlayerRank rank = getRank;
         for (Player tar : Bukkit.getOnlinePlayers()) {
             tar.getScoreboard().getTeam(rank.name()).addEntry(player.getName());
         }
