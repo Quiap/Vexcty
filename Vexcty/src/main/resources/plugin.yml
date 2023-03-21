@@ -21,8 +21,5 @@ commands:
   addvelocitytoplayer:
     aliases:
       - avtp
-  message:
-    aliases: msg
-  reply:
-    aliases: r
+  ip:
 
