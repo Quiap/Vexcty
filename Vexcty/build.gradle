@@ -1,0 +1,73 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.moonsworkshop'
+version = '1.8'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven { url = "https://jitpack.io" }
+    maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"}
+    maven { url = "https://oss.sonatype.org/content/groups/public/"}
+    maven { url = "https://repo.dmulloy2.net/repository/public/"}
+    maven { url = "https://repo.viaversion.com"}
+    maven { url = "https://repo.lucko.me/"}
+    maven { url = "https://maven.citizensnpcs.co/repo"}
+    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"}
+}
+
+dependencies {
+    implementation 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
+    implementation 'com.zaxxer:HikariCP:5.0.2-SNAPSHOT'
+    implementation 'com.comphenix.protocol:ProtocolLib:4.8.0'
+    implementation 'org.projectlombok:lombok:1.18.26'
+    implementation 'org.jetbrains:annotations:23.0.0'
+    compileOnly 'me.clip:placeholderapi:2.10.4'
+    testImplementation 'org.mockito:mockito-all:1.10.19'
+    compileOnly 'org.hibernate:hibernate-core:6.1.7.Final'
+    compileOnly 'io.dropwizard.metrics:metrics-core:4.2.17'
+    compileOnly 'io.dropwizard.metrics:metrics-healthchecks:4.2.17'
+    testImplementation 'simple-jndi:simple-jndi:0.11.4.1'
+    testImplementation 'javax.inject:javax.inject:1'
+    testImplementation 'org.apache.felix:org.apache.felix.framework:7.0.5'
+    testImplementation 'org.ops4j.pax.exam:pax-exam-container-native:4.13.5'
+    testImplementation 'org.ops4j.pax.exam:pax-exam-junit4:4.13.5'
+    testImplementation 'org.ops4j.pax.exam:pax-exam-link-mvn:4.13.5'
+    testImplementation 'org.ops4j.pax.url:pax-url-aether:2.6.12'
+    testImplementation 'org.ops4j.pax.url:pax-url-reference:2.6.12'
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
