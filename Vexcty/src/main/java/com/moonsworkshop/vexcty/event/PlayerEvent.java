@@ -7,8 +7,6 @@ import com.moonsworkshop.vexcty.command.GrantCommand;
 import com.moonsworkshop.vexcty.player.PlayerData;
 import com.moonsworkshop.vexcty.player.PlayerState;
 import com.moonsworkshop.vexcty.rank.PlayerRank;
-import com.moonsworkshop.vexcty.sql.Profile;
-import com.moonsworkshop.vexcty.sql.SQLManager;
 import com.moonsworkshop.vexgot.CC;
 import com.moonsworkshop.vexgot.IVexctyPlayer;
 import com.moonsworkshop.vexgot.Items;
@@ -17,15 +15,14 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -48,15 +45,10 @@ import java.util.concurrent.TimeUnit;
 
 public class PlayerEvent implements Listener {
 
-    SQLManager database;
 
-    private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build();
+    private final Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build();
 
     Vexcty plugin;
-
-    public PlayerEvent(Vexcty instance) {
-        this.plugin = instance;
-    }
 
     // disabled commands
 
@@ -76,7 +68,6 @@ public class PlayerEvent implements Listener {
                 (e.getMessage() == "minecraft:")) {
             e.getPlayer().sendMessage(CC.RED + "You do not have permission to execute this command! ");
             e.setCancelled(true);
-            return;
         }
     }
 
@@ -128,7 +119,7 @@ public class PlayerEvent implements Listener {
             plugin.getRankManager().setRank(player.getUniqueId(), PlayerRank.MOJANG);
         } else if (player.getName() == "Junkboy") {
             plugin.getRankManager().setRank(player.getUniqueId(), PlayerRank.MOJANG);
-         }else if (player.getName() == "JahKob") {
+        }else if (player.getName() == "JahKob") {
             plugin.getRankManager().setRank(player.getUniqueId(), PlayerRank.MOJANG);
         } else if (player.getName() == "danfrisk") {
             plugin.getRankManager().setRank(player.getUniqueId(), PlayerRank.MOJANG);
@@ -174,61 +165,9 @@ public class PlayerEvent implements Listener {
         inv.setItem(4, Items.TELEPORTER_ITEM);
         inv.setItem(6, Items.network);
 
-        Profile profile = plugin.getProfileManager().getProfile(player);
-        try {
-            Bukkit.getScheduler().runTaskAsynchronously(new Vexcty(), () -> profile.getData().load(player));
-        } catch (NullPointerException e1) {
-            player.kickPlayer("Error: Player profile could not be loaded!");
-        }
-
-
-//        Board board = new Board((Player) player);
-//
-//        if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.EN)) {
-//            board.updateTitle(CC.RED + "Vexcty Network");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.AR)) {
-//            board.updateTitle(CC.RED + "شبكة فيكستي");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.FR)) {
-//            board.updateTitle(CC.RED + "Réseau Vexcty");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.IT)) {
-//            board.updateTitle(CC.RED + "Rete Vexcty");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.JA)) {
-//            board.updateTitle(CC.RED + "ベクティ ネットワーク");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.LA)) {
-//            board.updateTitle(CC.RED + "Vexcty Network");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.PA)) {
-//            board.updateTitle(CC.RED + "ਵੇਕਸੀਟੀ ਨੈੱਟਵਰਕ");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.RU)) {
-//            board.updateTitle(CC.RED + "Сеть Вексти");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.ES)) {
-//            board.updateTitle(CC.RED + "red vejatorio");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.TR)) {
-//            board.updateTitle(CC.RED + "Vexty Ağı");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.UR)) {
-//            board.updateTitle(CC.RED + "ویکسیٹی نیٹ ورک");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.AM)) {
-//            board.updateTitle(CC.RED + "Vexcty አውታረ መረብ");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.ZH)) {
-//            board.updateTitle(CC.RED + "Vexcty网络");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.ZHHK)) {
-//            board.updateTitle(CC.RED + "Vexcty網絡");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.CS)) {
-//            board.updateTitle(CC.RED + "Síť Vexcty");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.DE)) {
-//            board.updateTitle(CC.RED + "Vexcty-Netzwerk");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.FI)) {
-//            board.updateTitle(CC.RED + "Vexcty verkko");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.PT)) {
-//            board.updateTitle(CC.RED + "Rede Vexcty");
-//        } else if (plugin.getLangManager().getLang(player.getUniqueId(), Lang.PL)) {
-//            board.updateTitle(CC.RED + "Sieć Vexcty");
-//        }
-//
-//
-//        boards.put(player.getUniqueId(), board);
-
 
     }
+
 
     // food level change
 
@@ -256,17 +195,12 @@ public class PlayerEvent implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
 
-        Profile profile = plugin.getProfileManager().getProfile(player);
-        if(profile != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(new Vexcty(), () -> profile.getData().save(player));
-        }
-
         plugin.getNametagManager().removeTag(e.getPlayer());
 
 
         e.setQuitMessage(null);
 
-        PlayerData data = plugin.getPlayer().getPlayerData((Player) player);
+        PlayerData data = plugin.getPlayer().getPlayerData(player);
         if (data.getPlayerState() == PlayerState.FROZEN) {
             plugin.getServer().getOnlinePlayers().stream().filter(players -> player.hasPermission("f2erg.vexcty.admin")).forEach(players -> { // for the players that are staff
                 player.sendMessage(CC.DARK_GRAY + "[" + CC.DARK_RED + "!" + CC.DARK_GRAY + "] " + CC.SECONDARY + player.getName() + CC.PRIMARY + " has left the server while he was frozen!");
@@ -276,7 +210,7 @@ public class PlayerEvent implements Listener {
                 player.sendMessage(String.valueOf(clickToBan));
             });
         }
-        plugin.getPlayer().destroyData((Player) player);
+        plugin.getPlayer().destroyData(player);
         plugin.getRecentMessages().remove(e.getPlayer().getUniqueId());
     }
 
@@ -286,7 +220,6 @@ public class PlayerEvent implements Listener {
     public void onMove(PlayerMoveEvent e) {
         if (e.getTo().getY() < 24) {
             e.getPlayer().teleport(Locations.SPAWN);
-            return;
         }
     }
 
@@ -300,14 +233,14 @@ public class PlayerEvent implements Listener {
         if (!player.isStaff()) {
             e.setCancelled(true);
         } else {
-            return;
+            e.setCancelled(false);
         }
     }
 
     // on break
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
 
         if (player.hasPermission("f2erg.vexcty.admin") && player.getGameMode() == GameMode.CREATIVE) {
             return;
@@ -320,7 +253,7 @@ public class PlayerEvent implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
 
         if (player.hasPermission("f2erg.vexcty.admin") && player.getGameMode() == GameMode.CREATIVE) {
             return;
@@ -368,23 +301,19 @@ public class PlayerEvent implements Listener {
     // item drop
     @EventHandler
     public void onItemDropEvent(PlayerDropItemEvent e) {
-        Player player = (Player) e.getPlayer();
+        Player player = e.getPlayer();
         if (player.hasPermission("f2erg.vexcty.admin")) {
-            e.setCancelled(true);
-        } else {
             e.setCancelled(false);
+        } else {
+            e.setCancelled(true);
         }
     }
 
     // item pickup
     @EventHandler
     public void onItemPickup(PlayerPickupItemEvent e) {
-        Player player = (Player) e.getPlayer();
-        if (player.hasPermission("f2erg.vexcty.admin")) {
-            e.setCancelled(true);
-        } else {
-            e.setCancelled(false);
-        }
+        Player player = e.getPlayer();
+        e.setCancelled(player.hasPermission("f2erg.vexcty.admin"));
     }
 
     // fall damage
@@ -580,11 +509,8 @@ public class PlayerEvent implements Listener {
         Player player = (Player) e.getPlayer();
         e.setCancelled(true);
 
-        if (plugin.getRankManager().getRank(player.getUniqueId()) == PlayerRank.MEMBER) {
-            Bukkit.broadcastMessage(CC.GRAY + player.getName() + ": " + e.getMessage());
-        } else {
             Bukkit.broadcastMessage(plugin.getRankManager().getRank(player.getUniqueId()).getName() + " " + player.getName() + ": " + ChatColor.WHITE + e.getMessage());
-        }
+
 
         if (plugin.getRankManager().getRank(player.getUniqueId()) == PlayerRank.MEMBER) {
 
@@ -605,15 +531,6 @@ public class PlayerEvent implements Listener {
     }
 
     @EventHandler
-    public void onProfileLoad(AsyncPlayerPreLoginEvent event) {
-        try {
-            plugin.getProfileManager().handleProfileCreation(event.getUniqueId(), event.getName());
-        } catch (NullPointerException e) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, "ERROR: Profile could not be created");
-        }
-    }
-
-    @EventHandler
     public void OnInventoryClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
 
@@ -630,13 +547,9 @@ public class PlayerEvent implements Listener {
 
             e.setCancelled(true);
 
-            switch (e.getSlot()) {
-
-                case 13:
-                    p.closeInventory();
-                    GrantCommand.secondGUI(p);
-
-                    break;
+            if (e.getSlot() == 13) {
+                p.closeInventory();
+                GrantCommand.secondGUI(p);
             }
         } else if (e.getView().getTitle().equals("Select Rank")) {
             e.setCancelled(true);
@@ -707,6 +620,4 @@ public class PlayerEvent implements Listener {
             }
         }
     }
-
-
 }
